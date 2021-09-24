@@ -10,6 +10,7 @@ target 'oonishiReonKadai15' do
   pod 'RxCocoa'
   pod 'RxOptional'
   pod 'RxDataSources'
+  pod 'RealmSwift'
 
   target 'oonishiReonKadai15Tests' do
     inherit! :search_paths
