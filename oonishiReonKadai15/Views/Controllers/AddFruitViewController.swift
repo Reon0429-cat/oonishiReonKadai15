@@ -6,24 +6,52 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-class AddFruitViewController: UIViewController {
+protocol AddFruitVCDelegate: AnyObject {
+    func fruitDidSaved()
+}
 
+final class AddFruitViewController: UIViewController {
+    
+    @IBOutlet private weak var saveButton: UIBarButtonItem!
+    @IBOutlet private weak var cancelButton: UIBarButtonItem!
+    @IBOutlet private weak var fruitNameTextField: UITextField!
+    
+    weak var delegate: AddFruitVCDelegate?
+    private let viewModel: AddFruitViewModelType = AddFruitViewModel()
+    private let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        setupBindings()
+        
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func setupBindings() {
+        saveButton.rx.tap
+            .subscribe(onNext: {
+                self.viewModel.inputs.saveButtonDidTapped(
+                    fruitNameText: self.fruitNameTextField.text
+                )
+            })
+            .disposed(by: disposeBag)
+        
+        cancelButton.rx.tap
+            .subscribe(onNext: viewModel.inputs.cancelButtonDidTapped)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.event
+            .drive(onNext: { [weak self] event in
+                switch event {
+                    case .returnToPreviousScreen:
+                        self?.navigationController?.popViewController(animated: true)
+                }
+            })
+            .disposed(by: disposeBag)
+        
     }
-    */
-
+    
 }

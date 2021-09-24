@@ -7,17 +7,17 @@
 
 import UIKit
 
-class FruitListTableViewCell: UITableViewCell {
+final class FruitListTableViewCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var checkmarkButton: UIButton!
+    
+    static var identifier: String { String(describing: self) }
+    static var nib: UINib { UINib(nibName: String(describing: self), bundle: nil) }
+    
+    func configure(fruit: Fruit) {
+        nameLabel.text = fruit.name
+        checkmarkButton.imageView?.isHidden = !fruit.isSelected
     }
     
 }

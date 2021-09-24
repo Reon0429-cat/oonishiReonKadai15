@@ -8,8 +8,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import RxOptional
-import RxDataSources
 
 final class FruitListViewController: UIViewController {
 
@@ -22,6 +20,19 @@ final class FruitListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupBindings()
+        setupTableView()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        viewModel.inputs.viewWillAppear()
+        
+    }
+    
+    private func setupBindings() {
         addFruitButton.rx.tap
             .subscribe(onNext: viewModel.inputs.addFruitButtonDidTapped)
             .disposed(by: disposeBag)
@@ -31,11 +42,45 @@ final class FruitListViewController: UIViewController {
                 guard let self = self else { return }
                 switch event {
                     case .presentAddFruitVC:
-                        // センイ
+                        self.presentAddFruitVC()
                 }
             })
             .disposed(by: disposeBag)
         
+        viewModel.outputs.fruits
+            .drive(tableView.rx.items) { tableView, row, fruit in
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: FruitListTableViewCell.identifier
+                ) as! FruitListTableViewCell
+                cell.configure(fruit: fruit)
+                return cell
+            }
+            .disposed(by: disposeBag)
+        
+        Observable.zip(tableView.rx.itemSelected,
+                       tableView.rx.modelSelected(Fruit.self))
+            .bind { [weak self] indexPath, fruit in
+                guard let self = self else { return }
+                self.tableView.deselectRow(at: indexPath, animated: true)
+                self.viewModel.inputs.cellDidTapped(fruit: fruit, at: indexPath.row)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    func setupTableView() {
+        tableView.register(FruitListTableViewCell.nib,
+                           forCellReuseIdentifier: FruitListTableViewCell.identifier)
+        tableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+    }
+    
+    private func presentAddFruitVC() {
+        let addFruitVC = UIStoryboard(name: "AddFruit", bundle: nil)
+            .instantiateViewController(withIdentifier: String(describing: AddFruitViewController.self)
+            ) as! AddFruitViewController
+        self.navigationController?.pushViewController(addFruitVC, animated: true)
     }
     
 }
+
+extension FruitListViewController: UIScrollViewDelegate { }
