@@ -1,5 +1,5 @@
 //
-//  FruitListViewController.swift
+//  AddFruitViewController.swift
 //  oonishiReonKadai15
 //
 //  Created by 大西玲音 on 2021/09/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FruitListViewController: UIViewController {
+class AddFruitViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

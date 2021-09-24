@@ -33,6 +33,10 @@
                     <navigationItem key="navigationItem" id="NR1-oo-02t">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="LGT-eT-Dhg"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="addFruitButton" destination="LGT-eT-Dhg" id="YjB-Nu-LYu"/>
+                        <outlet property="tableView" destination="paJ-jL-uYD" id="zHG-hE-OIh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
