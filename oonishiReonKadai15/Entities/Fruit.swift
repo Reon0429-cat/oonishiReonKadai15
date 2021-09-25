@@ -10,5 +10,6 @@ import Foundation
 // 共通の型
 struct Fruit {
     let name: String
-    let isSelected: Bool
+    var isSelected: Bool
+    let uuidString: String
 }
