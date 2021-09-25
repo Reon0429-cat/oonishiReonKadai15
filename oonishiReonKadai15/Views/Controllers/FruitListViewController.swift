@@ -39,10 +39,10 @@ final class FruitListViewController: UIViewController {
         
         viewModel.outputs.event
             .drive(onNext: { [weak self] event in
-                guard let self = self else { return }
+                guard let strongSelf = self else { return }
                 switch event {
                     case .presentAddFruitVC:
-                        self.presentAddFruitVC()
+                        strongSelf.presentAddFruitVC()
                 }
             })
             .disposed(by: disposeBag)
@@ -60,9 +60,9 @@ final class FruitListViewController: UIViewController {
         Observable.zip(tableView.rx.itemSelected,
                        tableView.rx.modelSelected(Fruit.self))
             .bind { [weak self] indexPath, fruit in
-                guard let self = self else { return }
-                self.tableView.deselectRow(at: indexPath, animated: true)
-                self.viewModel.inputs.cellDidTapped(fruit: fruit, at: indexPath.row)
+                guard let strongSelf = self else { return }
+                strongSelf.tableView.deselectRow(at: indexPath, animated: true)
+                strongSelf.viewModel.inputs.cellDidTapped(fruit: fruit, at: indexPath.row)
             }
             .disposed(by: disposeBag)
     }

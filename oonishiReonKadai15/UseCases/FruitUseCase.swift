@@ -20,7 +20,7 @@ final class FruitUseCase {
     private let disposeBag = DisposeBag()
     private let saveFruitTrigger = PublishRelay<Fruit>()
     private let loadAllFruitsTrigger = PublishRelay<Void>()
-    private let updateFruitTrigger = PublishRelay<(fruit: Fruit, index: Int)>()
+    private let updateFruitTrigger = PublishRelay<Fruit>()
     private let fruitsRelay = BehaviorRelay<[Fruit]>(value: [])
     
     var fruits: Observable<[Fruit]> {
@@ -39,9 +39,7 @@ final class FruitUseCase {
             .disposed(by: disposeBag)
         
         updateFruitTrigger
-            .flatMapLatest { fruit, index -> Completable in
-                self.repository.update(fruit: fruit, at: index)
-            }
+            .flatMapLatest(repository.update(fruit:))
             .subscribe()
             .disposed(by: disposeBag)
     }
@@ -54,10 +52,11 @@ final class FruitUseCase {
         loadAllFruitsTrigger.accept(())
     }
     
-    func updateIsSelected(fruit: Fruit, index: Int) {
+    func updateIsSelected(fruit: Fruit) {
         let newFruit = Fruit(name: fruit.name,
-                             isSelected: !fruit.isSelected)
-        updateFruitTrigger.accept((fruit: newFruit, index: index))
+                             isSelected: !fruit.isSelected,
+                             uuidString: fruit.uuidString)
+        updateFruitTrigger.accept(newFruit)
     }
     
 }

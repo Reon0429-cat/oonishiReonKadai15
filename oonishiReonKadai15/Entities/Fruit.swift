@@ -11,4 +11,5 @@ import Foundation
 struct Fruit {
     let name: String
     let isSelected: Bool
+    let uuidString: String
 }
