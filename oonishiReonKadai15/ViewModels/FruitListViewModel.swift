@@ -63,7 +63,7 @@ extension FruitListViewModel: FruitListViewModelInput {
     }
     
     func cellDidTapped(fruit: Fruit, at index: Int) {
-        fruitUseCase.updateIsSelected(fruit: fruit, index: index)
+        fruitUseCase.updateIsSelected(fruit: fruit)
         fruitUseCase.loadAllFruits()
     }
     

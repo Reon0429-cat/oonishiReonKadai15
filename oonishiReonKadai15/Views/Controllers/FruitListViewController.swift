@@ -39,10 +39,10 @@ final class FruitListViewController: UIViewController {
         
         viewModel.outputs.event
             .drive(onNext: { [weak self] event in
-                guard let self = self else { return }
+                guard let strongSelf = self else { return }
                 switch event {
                     case .presentAddFruitVC:
-                        self.presentAddFruitVC()
+                        strongSelf.presentAddFruitVC()
                 }
             })
             .disposed(by: disposeBag)
@@ -56,7 +56,8 @@ final class FruitListViewController: UIViewController {
                 return cell
             }
             .disposed(by: disposeBag)
-        
+
+        // itemSelected や modelSelected は使ったことないのでレビューしてないです
         Observable.zip(tableView.rx.itemSelected,
                        tableView.rx.modelSelected(Fruit.self))
             .bind { [weak self] indexPath, fruit in

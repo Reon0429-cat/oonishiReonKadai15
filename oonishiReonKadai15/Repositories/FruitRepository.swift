@@ -11,7 +11,7 @@ import RxSwift
 protocol FruitRepositoryProtocol {
     func save(fruit: Fruit) -> Completable
     func loadAllFruits() -> Single<[Fruit]>
-    func update(fruit: Fruit, at index: Int) -> Completable
+    func update(fruit: Fruit) -> Completable
 }
 
 final class FruitRepository: FruitRepositoryProtocol {
@@ -30,8 +30,8 @@ final class FruitRepository: FruitRepositoryProtocol {
         return .just(dataStore.loadAllFruits())
     }
     
-    func update(fruit: Fruit, at index: Int) -> Completable {
-        dataStore.update(fruit: fruit, at: index)
+    func update(fruit: Fruit) -> Completable {
+        dataStore.update(fruit: fruit)
         return .empty()
     }
     

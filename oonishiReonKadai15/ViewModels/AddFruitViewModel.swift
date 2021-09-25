@@ -44,7 +44,8 @@ extension AddFruitViewModel: AddFruitViewModelInput {
     func saveButtonDidTapped(fruitNameText: String?) {
         guard let fruitNameText = fruitNameText else { return }
         let fruit = Fruit(name: fruitNameText,
-                          isSelected: false)
+                          isSelected: false,
+                          uuidString: UUID().uuidString)
         fruitUseCase.save(fruit: fruit)
         eventRelay.accept(.returnToPreviousScreen)
     }
