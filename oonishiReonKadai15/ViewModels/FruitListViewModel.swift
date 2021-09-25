@@ -11,8 +11,7 @@ import RxCocoa
 
 protocol FruitListViewModelInput {
     func viewWillAppear()
-    func addFruitButtonDidTapped()
-    func cellDidTapped(fruit: Fruit, at index: Int)
+    func cellDidTapped(fruit: Fruit)
 }
 
 protocol FruitListViewModelOutput: AnyObject {
@@ -27,8 +26,14 @@ protocol FruitListViewModelType {
 
 final class FruitListViewModel {
     
-    init() {
+    init(addFruitButtonObservable: Observable<Void>) {
         setupBindings()
+        
+        addFruitButtonObservable
+            .subscribe(onNext: {
+                self.eventRelay.accept(.presentAddFruitVC)
+            })
+            .disposed(by: disposeBag)
     }
     
     enum Event {
@@ -58,12 +63,8 @@ extension FruitListViewModel: FruitListViewModelInput {
         fruitUseCase.loadAllFruits()
     }
     
-    func addFruitButtonDidTapped() {
-        eventRelay.accept(.presentAddFruitVC)
-    }
-    
-    func cellDidTapped(fruit: Fruit, at index: Int) {
-        fruitUseCase.updateIsSelected(fruit: fruit, index: index)
+    func cellDidTapped(fruit: Fruit) {
+        fruitUseCase.updateIsSelected(fruit: fruit)
         fruitUseCase.loadAllFruits()
     }
     

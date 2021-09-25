@@ -14,7 +14,9 @@ final class FruitListViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var addFruitButton: UIBarButtonItem!
     
-    private let viewModel: FruitListViewModelType = FruitListViewModel()
+    private lazy var viewModel: FruitListViewModelType = FruitListViewModel(
+        addFruitButtonObservable: addFruitButton.rx.tap.asObservable()
+    )
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -33,10 +35,6 @@ final class FruitListViewController: UIViewController {
     }
     
     private func setupBindings() {
-        addFruitButton.rx.tap
-            .subscribe(onNext: viewModel.inputs.addFruitButtonDidTapped)
-            .disposed(by: disposeBag)
-        
         viewModel.outputs.event
             .drive(onNext: { [weak self] event in
                 guard let strongSelf = self else { return }
@@ -62,7 +60,7 @@ final class FruitListViewController: UIViewController {
             .bind { [weak self] indexPath, fruit in
                 guard let strongSelf = self else { return }
                 strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-                strongSelf.viewModel.inputs.cellDidTapped(fruit: fruit, at: indexPath.row)
+                strongSelf.viewModel.inputs.cellDidTapped(fruit: fruit)
             }
             .disposed(by: disposeBag)
     }
